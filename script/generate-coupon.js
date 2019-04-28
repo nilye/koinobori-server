@@ -1,9 +1,9 @@
-const c = [
-	'p2a2S_',
-	'N5DbRF',
-	'1noLEi',
-]
-const n = ['测试0','测试1','测试2']
+const c = {
+	"OmR7oK": "凤凰书城",
+	"6Ra5i5": "南京招生考试",
+	"039Vtb": "唯然",
+	"23Ejme": "市妇女儿童活动中心"
+}
 
 const initDb = require('../db').initDb
 
@@ -13,11 +13,10 @@ initDb.then((db)=>{
 	let data = []
 	for (let i in c){
 		data.push({
-			code: c[i],
-			name: n[i],
+			code: i,
+			name: c[i],
 			usedCount: 0,
-			passCode:'testCoupon'+i,
-			discount: 10
+			discount: 0
 		})
 	}
 	console.log(data)

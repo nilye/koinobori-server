@@ -5,8 +5,10 @@ const request = require("request");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.json({code:0})
+  res.json({code: "1"})
 });
+
+// http://api.koinobori.design/admin/checkin?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1IjoiX2tvaW5vYm9yaSIsImlhdCI6MTU1NTg3MjkwNn0.3SpYzTs4_tdTpgjZzsy5kDuHz1mG8ooyjKE-UuQrI-M
 
 router.get('/login/user', function(req, res, next) {
   request({

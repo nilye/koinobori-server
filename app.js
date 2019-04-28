@@ -51,13 +51,15 @@ function initRoutes(){
 	const indexRouter = require('./routes/index');
 	const wxpayRouter = require('./routes/wxpay');
 	const ticketRouter = require('./routes/ticket');
-	const adminRouter = require('./routes/admin');
 	const couponRouter = require('./routes/coupon');
+	const giveawayRouter = require('./routes/giveaway');
+	const adminRouter = require('./routes/admin');
 	app.use('/', indexRouter);
 	app.use('/wxpay', wxpayRouter)
 	app.use('/ticket', ticketRouter)
-	app.use('/admin', adminRouter)
 	app.use('/coupon', couponRouter)
+	app.use('/giveaway', giveawayRouter)
+	app.use('/admin', adminRouter)
 }
 
 initDb.then(()=>{

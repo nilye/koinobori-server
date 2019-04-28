@@ -25,9 +25,9 @@ router.post('/issue/wxpay', async function(req, res){
 router.get('/list', function (req, res) {
 	const openid = req.query['openid']
 	if (!openid){
-		res.json({code:0})
+		res.json({code:1, data:[], msg:'ok'})
 	}
-	Ticket.find({openid}).sort({checked:1, createdTime:-1}).toArray().then(tickets=>{
+	Ticket.find({openid}).sort({checked:1, createdTime:-1, fee:-1}).toArray().then(tickets=>{
 		res.json({code:1, data:tickets, msg:'ok'})
 	})
 })

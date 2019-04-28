@@ -7,22 +7,8 @@ const request = require("request");
 const xml2js = require('xml2js').parseString
 
 const db = require('../db').db()
-const User = db.collection('user')
 const Order = db.collection('order')
 
-function signin({openid, phone, userInfo}){
-	return new Promise((resolve, reject)=>{
-		User.findOne({openid}).then(exist=>{
-			if (!exist){
-				User.insertOne({openid, phone, profile: userInfo })
-					.then(newUser=> resolve(newUser.ops[0]))
-					.catch(err=> reject(err))
-			} else {
-				resolve(exist)
-			}
-		})
-	})
-}
 
 function createOrder(orderNo, {items, openid, fee, phone, coupon}, prepayId, paySign){
 	return new Promise((resolve, reject)=>{
@@ -42,12 +28,14 @@ function createOrder(orderNo, {items, openid, fee, phone, coupon}, prepayId, pay
 * phone
 * userInfo
 * fee
-* */
+*/
 
-router.post('/order', function(req, res, next) {
+router.post('/order', function(req, res) {
 	const reqBody = req.body,
 		orderNo = wxpay.createOrderNo();
-	reqBody.fee = 1
+	if (!reqBody.openid || !reqBody.phone){
+		res.json({code:0, msg:'invalid params'})
+	}
 	let params = {
 		appid: config.appId,
 		body: config.goodsBody,
@@ -82,7 +70,7 @@ router.post('/order', function(req, res, next) {
 					// create order and sign in user
 					try {
 						let dbData = await Promise.all([
-							signin(reqBody),
+							TicketOps.signin(reqBody),
 							createOrder(orderNo, reqBody, payData.prepay_id[0], resData.paySign)
 						])
 						// console.log(resData)
@@ -114,10 +102,9 @@ router.all('/pay', function (req, res, next) {
 			payed:true,
 			payedTime: wxpay.stringToDate(reqBody.time_end),
 			wxTransactionId: reqBody.transaction_id
-		}}, {
+		}},{
 			returnOriginal: false
 		}).then(order=> {
-			console.log(order.value)
 			// check if ticket is issued
 			return TicketOps.createTicketFromOrder(order.value)
 		}).then(()=>{

@@ -29,11 +29,13 @@ router.use('/checkin', function(req, res){
 		checked: true,
 		checkedTime: new Date(),
 	}}, {
-		returnOriginal: false
-	}).then(ticket=>{
-		if (ticket.lastErrorObject.n === 1){
+		returnOriginal: true
+	}).then(result=>{
+		if (result.value['checked'] === true){
+			res.status(400).json({code:0, msg:'已结束'})
+		} else if (result.ok === 1){
 			io.sockets.to(code).emit('checked-in', true)
-			res.json({code: 1, msg:'checked in'})
+			res.json({code: 1, msg:'ok'})
 		} else {
 			res.status(400).json({code:0})
 		}
