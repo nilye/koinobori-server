@@ -54,12 +54,14 @@ function initRoutes(){
 	const couponRouter = require('./routes/coupon');
 	const giveawayRouter = require('./routes/giveaway');
 	const adminRouter = require('./routes/admin');
+	const statsRouter = require('./routes/stats/index');
 	app.use('/', indexRouter);
 	app.use('/wxpay', wxpayRouter)
 	app.use('/ticket', ticketRouter)
 	app.use('/coupon', couponRouter)
 	app.use('/giveaway', giveawayRouter)
 	app.use('/admin', adminRouter)
+	app.use('/stats', statsRouter)
 }
 
 initDb.then(()=>{

@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 const config = require('../util/config')
 const db = require('../db').db()
 const Ticket = db.collection('ticket')
+const Giveaway = db.collection('giveaway')
 
 router.use(function (req, res, next) {
 	let token = req.body.token || req.query.token || req.headers['Authorization']
@@ -22,10 +23,16 @@ router.use(function (req, res, next) {
 	}
 })
 
+
+/*
+* code / text
+* token
+*/
 router.use('/checkin', function(req, res){
 	let code = req.query['code'] || req.query['text']
+	let orderNo = req.query['orderNo'] || req.body['orderNo']
 	const io = req.app.get('socketio');
-	Ticket.findOneAndUpdate({code}, {$set:{
+	Ticket.findOneAndUpdate({ $or: [{code},{orderNo}] }, {$set:{
 		checked: true,
 		checkedTime: new Date(),
 	}}, {
@@ -44,11 +51,29 @@ router.use('/checkin', function(req, res){
 	})
 })
 
-router.use('/testsocket', function(req, res){
-	const io = req.app.get('socketio'),
-		room = req.query['room']
-	io.sockets.to(room).emit('checkin', true)
-	res.json({code:1})
+
+/*
+* data: [{
+*   phone
+*   items
+* }]
+*/
+router.post('/giveaway', function(req, res){
+	let reqData = req.body.data
+	let data = reqData.map(i=>{
+		return {
+			items: i.items,
+			phone: i.phone,
+			createdTime: new Date(),
+			exchanged:false,
+			exchangedTime: null
+		}
+	})
+	Giveaway.insertMany(data).then(res=>{
+		res.json({code:1, data:[], msg:'ok'})
+	}).catch(err=>{
+		res.json({code:0, data:[], msg:'error'})
+	})
 })
 
 module.exports = router;
