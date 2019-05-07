@@ -23,7 +23,7 @@ function createTicket(order, source) {
 					orderNo: order.orderNo,
 					openid: order.openid,
 					phone: order.phone,
-					source: source
+					source: item.group ? 'group' : source
 				})
 			}
 		}
@@ -39,8 +39,12 @@ exports.signin = function({openid, phone, userInfo}){
 	return new Promise((resolve, reject)=>{
 		User.findOne({openid}).then(exist=>{
 			if (!exist){
-				User.insertOne({openid, phone, profile: userInfo })
-					.then(newUser=> resolve(newUser.ops[0]))
+				User.insertOne({
+					openid,
+					phone,
+					profile: userInfo,
+					createdTime: new Date()
+				}).then(newUser=> resolve(newUser.ops[0]))
 					.catch(err=> reject(err))
 			} else {
 				resolve(exist)

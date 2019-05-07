@@ -6,5 +6,5 @@ module.exports = {
 	notifyUrl: 'http://api.koinobori.design/wxpay/pay',
 	goodsBody: '旗遇小卖部-门票',
 	jwtSecret: 'liyuqi0501_',
-	jwtPayload: {u:'_koinobori'}
+	jwtPayload: {u:'_koinobori'},
 }

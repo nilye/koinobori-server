@@ -8,7 +8,7 @@ const logger = require('morgan');
 const initDb = require('./db').initDb
 const app = express();
 
-app.use(logger('dev'));
+app.use(logger(':method :status :response-time ms :url'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -22,8 +22,12 @@ app.use(bodyParser.xml({
 }));
 app.use(function(req, res, next){
 	res.setHeader('Access-Control-Allow-Origin', '*');
-	res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 	res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE, OPTIONS');
+	res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+	res.setHeader('Access-Control-Allow-Credentials', "true");
+	if (req.method === 'OPTIONS'){
+		return res.status(200).json({})
+	}
 	next();
 });
 
@@ -54,13 +58,15 @@ function initRoutes(){
 	const couponRouter = require('./routes/coupon');
 	const giveawayRouter = require('./routes/giveaway');
 	const adminRouter = require('./routes/admin');
-	const statsRouter = require('./routes/stats/index');
+	const distributorRouter = require('./routes/distributor');
+	const statsRouter = require('./routes/stats');
 	app.use('/', indexRouter);
 	app.use('/wxpay', wxpayRouter)
 	app.use('/ticket', ticketRouter)
 	app.use('/coupon', couponRouter)
 	app.use('/giveaway', giveawayRouter)
 	app.use('/admin', adminRouter)
+	app.use('/distributor', distributorRouter)
 	app.use('/stats', statsRouter)
 }
 

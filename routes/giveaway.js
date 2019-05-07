@@ -19,7 +19,7 @@ router.post('/phone', function(req, res){
 	TicketOps.signin(reqBody)
 	Giveaway.find({phone: reqBody.phone, exchanged:false}).sort({createdTime:-1}).toArray().then( async tickets => {
 		if (tickets.length > 0) {
-			let items = tickets.map(i => i.items)
+			let items = tickets.map(i => Object.assign(i.items,{group:i.group}))
 			try {
 				let data = {
 					orderNo: null,

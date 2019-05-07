@@ -1,7 +1,7 @@
 const mongodb = require('mongodb')
 
-const url = 'mongodb://koinobori:liyuqi0501@localhost:27017';
-// const url = 'mongodb://koinobori:liyuqi0501@101.37.246.38:27017';
+// const url = 'mongodb://koinobori:liyuqi0501@localhost:27017';
+const url = 'mongodb://koinobori:liyuqi0501@101.37.246.38:27017';
 // const url = 'mongodb://localhost:27017';
 const MongoClient = new mongodb.MongoClient(url, {
 	poolSize:10,

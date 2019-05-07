@@ -76,15 +76,15 @@ router.post('/order', function(req, res) {
 						// console.log(resData)
 						// console.log(dbData)
 						// response success
-						res.json({code:1, data: {
+						return res.json({code:1, data: {
 							payParams: resData,
 							orderNo: orderNo
 						}, msg: 'ok'})
 					} catch (err) {
-						res.json({code:0, msg: 'ERROR'})
+						return res.json({code:0, msg: 'ERROR'})
 					}
 				} else {
-					res.json({code:0, msg: payData['err_code_des']})
+					return res.json({code:0, msg: payData['err_code_des']})
 				}
 			})
 		}
